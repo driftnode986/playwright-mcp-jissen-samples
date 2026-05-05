@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@0.0.73",
+        "--caps=testing,storage",
+        "--isolated",
+        "--storage-state=./auth/admin.json"
+      ]
+    }
+  }
+}

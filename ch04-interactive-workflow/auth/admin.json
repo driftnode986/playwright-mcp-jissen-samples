@@ -1,0 +1,22 @@
+{
+  "cookies": [
+    {
+      "name": "demo-session",
+      "value": "ok",
+      "domain": "",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "file://",
+      "localStorage": [
+        { "name": "demo-auth-email", "value": "user@example.com" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>商品検索</title>
+  </head>
+  <body>
+    <header>
+      <h1>商品検索</h1>
+      <form id="search-form" role="search" aria-label="商品検索">
+        <label>
+          検索ワード
+          <input type="search" name="query" autocomplete="off">
+        </label>
+        <button type="submit">検索</button>
+      </form>
+      <p>
+        カート: <span id="cart-count" aria-live="polite">0</span> 件
+      </p>
+    </header>
+    <main>
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading">検索結果</h2>
+        <ul id="product-list" aria-label="商品一覧"></ul>
+        <nav aria-label="ページ送り">
+          <button type="button" id="prev" disabled>前のページ</button>
+          <span id="page-indicator" aria-live="polite">1 / 1</span>
+          <button type="button" id="next" disabled>次のページ</button>
+        </nav>
+      </section>
+    </main>
+    <script>
+      const products = [
+        { id: 'p001', name: '黒色のキーボード' },
+        { id: 'p002', name: '白色のキーボード' },
+        { id: 'p003', name: 'ワイヤレスマウス' },
+        { id: 'p004', name: '有線マウス' },
+        { id: 'p005', name: '27 インチモニター' },
+        { id: 'p006', name: '32 インチモニター' },
+        { id: 'p007', name: 'ノート PC スタンド' },
+        { id: 'p008', name: 'USB ハブ' },
+      ];
+      const PAGE_SIZE = 3;
+      let currentQuery = '';
+      let currentPage = 1;
+      let cart = 0;
+
+      const list = document.getElementById('product-list');
+      const cartCount = document.getElementById('cart-count');
+      const indicator = document.getElementById('page-indicator');
+      const prev = document.getElementById('prev');
+      const next = document.getElementById('next');
+      const form = document.getElementById('search-form');
+
+      function filtered() {
+        if (!currentQuery) return products;
+        return products.filter((p) => p.name.includes(currentQuery));
+      }
+
+      function totalPages() {
+        return Math.max(1, Math.ceil(filtered().length / PAGE_SIZE));
+      }
+
+      function render() {
+        const items = filtered();
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const slice = items.slice(start, start + PAGE_SIZE);
+        list.innerHTML = '';
+        for (const product of slice) {
+          const li = document.createElement('li');
+          const name = document.createElement('span');
+          name.textContent = product.name;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = `${product.name}をカートに追加`;
+          button.dataset.productId = product.id;
+          button.addEventListener('click', () => {
+            cart += 1;
+            cartCount.textContent = String(cart);
+          });
+          li.append(name, ' ', button);
+          list.append(li);
+        }
+        indicator.textContent = `${currentPage} / ${totalPages()}`;
+        prev.disabled = currentPage <= 1;
+        next.disabled = currentPage >= totalPages();
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        currentQuery = String(data.get('query') ?? '').trim();
+        currentPage = 1;
+        render();
+      });
+      prev.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          render();
+        }
+      });
+      next.addEventListener('click', () => {
+        if (currentPage < totalPages()) {
+          currentPage += 1;
+          render();
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>

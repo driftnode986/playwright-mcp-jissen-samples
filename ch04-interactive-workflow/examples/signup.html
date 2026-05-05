@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>新規登録</title>
+  </head>
+  <body>
+    <main>
+      <h1>新規登録</h1>
+      <form id="signup-form" aria-labelledby="signup-heading" novalidate>
+        <h2 id="signup-heading">アカウントを作成する</h2>
+
+        <label>
+          メールアドレス
+          <input type="email" name="email" required>
+        </label>
+        <p role="alert" id="email-error" class="error" hidden>
+          有効なメールアドレスを入力してください
+        </p>
+
+        <label>
+          パスワード（8 文字以上）
+          <input type="password" name="password" required minlength="8">
+        </label>
+        <p role="alert" id="password-error" class="error" hidden>
+          パスワードは 8 文字以上で入力してください
+        </p>
+
+        <label>
+          パスワードの確認
+          <input type="password" name="confirm" required>
+        </label>
+        <p role="alert" id="confirm-error" class="error" hidden>
+          パスワードが一致しません
+        </p>
+
+        <label>
+          <input type="checkbox" name="terms" required>
+          利用規約に同意する
+        </label>
+        <p role="alert" id="terms-error" class="error" hidden>
+          利用規約への同意が必要です
+        </p>
+
+        <button type="submit">登録する</button>
+      </form>
+
+      <section id="success" hidden aria-live="polite">
+        <h2>登録が完了しました</h2>
+        <p>確認メールを送信しました。メール内のリンクから本登録を完了してください。</p>
+      </section>
+    </main>
+    <script>
+      const form = document.getElementById('signup-form');
+      const success = document.getElementById('success');
+
+      const errors = {
+        email: document.getElementById('email-error'),
+        password: document.getElementById('password-error'),
+        confirm: document.getElementById('confirm-error'),
+        terms: document.getElementById('terms-error'),
+      };
+
+      function validate(data) {
+        const result = { email: false, password: false, confirm: false, terms: false };
+        const email = String(data.get('email') ?? '');
+        const password = String(data.get('password') ?? '');
+        const confirm = String(data.get('confirm') ?? '');
+        const terms = data.get('terms') === 'on';
+        result.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        result.password = password.length >= 8;
+        result.confirm = result.password && confirm === password;
+        result.terms = terms;
+        return result;
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const ok = validate(data);
+        for (const [key, error] of Object.entries(errors)) {
+          error.hidden = ok[key];
+        }
+        if (Object.values(ok).every(Boolean)) {
+          form.hidden = true;
+          success.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>

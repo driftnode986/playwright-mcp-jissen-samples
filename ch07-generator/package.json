@@ -1,0 +1,20 @@
+{
+  "name": "ch07-generator",
+  "version": "0.1.0",
+  "description": "Ch07 Generator でテストファイルを自動生成する (Claude Code × Playwright MCP 実践ガイド)",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:seed": "playwright test tests/seed.spec.ts tests/seed-todo.spec.ts tests/seed-shop.spec.ts tests/seed-saas.spec.ts",
+    "test:generated": "playwright test tests/todo tests/shop tests/saas",
+    "agents:init": "playwright init-agents --loop=claude"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.59.1",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

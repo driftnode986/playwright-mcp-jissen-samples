@@ -1,0 +1,42 @@
+# nightly ワークフロー - cron で毎日 1 回フルリグレッション実行
+# 出典: https://playwright.dev/docs/ci + GitHub Actions schedule 公式構文
+# Test Agents の Planner 再実行は対話型起動が前提のため CI 自動化の対象外。
+# 本ワークフローでは「通常テストの nightly 実行」のみ扱う
+name: Playwright Tests (nightly)
+on:
+  schedule:
+    - cron: '0 18 * * *'  # 毎日 UTC 18:00 (JST 03:00)
+  workflow_dispatch:  # 手動起動も可能にする
+jobs:
+  full-regression:
+    timeout-minutes: 90
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project }}
+      - name: Run full regression
+        run: npx playwright test --project=${{ matrix.project }}
+      - name: Upload HTML report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: nightly-report-${{ matrix.project }}-${{ github.run_attempt }}
+          path: playwright-report/
+          retention-days: 14
+      - name: Upload test artifacts on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: nightly-artifacts-${{ matrix.project }}
+          path: test-results/
+          retention-days: 14

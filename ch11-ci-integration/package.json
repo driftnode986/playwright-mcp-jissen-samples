@@ -1,0 +1,21 @@
+{
+  "name": "ch11-ci-integration",
+  "version": "0.1.0",
+  "description": "Ch11 CI 統合 (Claude Code × Playwright MCP 実践ガイド)",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:ci": "CI=true playwright test",
+    "test:shard1": "CI=true playwright test --shard=1/2",
+    "test:shard2": "CI=true playwright test --shard=2/2",
+    "merge:reports": "playwright merge-reports --reporter html ./all-blob-reports"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.59.1",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

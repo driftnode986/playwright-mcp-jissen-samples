@@ -1,0 +1,27 @@
+{
+  "browser": {
+    "browserName": "chromium",
+    "isolated": true,
+    "launchOptions": {
+      "headless": true,
+      "channel": "chrome"
+    },
+    "contextOptions": {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "locale": "ja-JP",
+      "timezoneId": "Asia/Tokyo"
+    }
+  },
+  "capabilities": ["core"],
+  "network": {
+    "allowedOrigins": ["https://example.com:*"]
+  },
+  "timeouts": {
+    "action": 5000,
+    "navigation": 60000
+  },
+  "outputDir": "./playwright-output"
+}

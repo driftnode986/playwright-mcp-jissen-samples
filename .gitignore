@@ -16,3 +16,8 @@ blob-report/
 # IDE
 .vscode/
 .idea/
+
+# 本書のサンプルでは `.mcp.json` を教材として配布するため、
+# グローバル gitignore で除外されていても unignore する。
+!.mcp.json
+!**/.mcp.json

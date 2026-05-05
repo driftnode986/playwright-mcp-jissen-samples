@@ -7,7 +7,7 @@ const SHOP_URL = pathToFileURL(
 ).toString();
 
 test.describe('CSS class 依存（アンチパターン）', () => {
-  test('CSS class で要素を取得できる（壊れやすい）', async ({ page }) => {
+  test('CSS class で要素を取得（壊れやすい）', async ({ page }) => {
     await page.goto(SHOP_URL);
     const buttons = page.locator('button.product-button');
     await expect(buttons).toHaveCount(3);

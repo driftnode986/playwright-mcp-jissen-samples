@@ -15,7 +15,8 @@ test.describe('getByText 主体（テキスト依存）', () => {
 
   test('正規表現で部分一致', async ({ page }) => {
     await page.goto(SHOP_URL);
-    const button = page.getByText(/黒色のキーボードをカートに追加/);
+    const pattern = /黒色のキーボードをカートに追加/;
+    const button = page.getByText(pattern);
     await button.click();
     await expect(page.getByText('カート: 1 件')).toBeVisible();
   });

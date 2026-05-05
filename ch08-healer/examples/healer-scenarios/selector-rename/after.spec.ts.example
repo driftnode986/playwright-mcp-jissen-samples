@@ -1,0 +1,19 @@
+// spec: specs/saas-dashboard-basic.md
+// seed: tests/seed-saas.spec.ts
+//
+// 修復後の状態: アプリが "7days" 表記に変わったことを Healer が
+// browser_snapshot で検出し、Locator を更新した。
+
+import { test, expect } from './fixtures';
+
+test.describe('Inspecting KPIs', () => {
+  test('Default Range Shows 7 Day KPIs', async ({ page }) => {
+    // Expected Results:
+    // - The "7days" range button has aria-pressed="true"
+    const range7d = page.getByRole('button', { name: '7days' });
+    await expect(range7d).toHaveAttribute('aria-pressed', 'true');
+
+    // - The active users tile shows "1230"
+    await expect(page.locator('#kpi-users')).toHaveText('1230');
+  });
+});

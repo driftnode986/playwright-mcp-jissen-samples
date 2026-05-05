@@ -1,0 +1,23 @@
+// spec: specs/saas-dashboard-basic.md
+// seed: tests/seed-saas.spec.ts
+//
+// 修復後の状態: 動的データに対する resilient な assertion に書き換えた。
+// agent definition の Step 5 が "For inherently dynamic data, utilize regular
+// expressions to produce resilient locators" と指示している通り、
+// 正規表現で「数値が表示されている」事実だけを検証する。
+
+import { test, expect } from './fixtures';
+
+test.describe('Inspecting KPIs (dynamic)', () => {
+  test('Default Range Shows 7 Day KPIs', async ({ page }) => {
+    // Expected Results:
+    // - The active users tile shows a numeric value
+    await expect(page.locator('#kpi-users')).toHaveText(/^\d+$/);
+
+    // - The revenue tile shows a numeric value
+    await expect(page.locator('#kpi-revenue')).toHaveText(/^\d+$/);
+
+    // - The churn rate tile shows a percentage
+    await expect(page.locator('#kpi-churn')).toHaveText(/^\d+(\.\d+)?%$/);
+  });
+});

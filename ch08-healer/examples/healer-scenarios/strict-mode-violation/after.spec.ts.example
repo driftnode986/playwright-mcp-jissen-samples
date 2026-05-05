@@ -1,0 +1,21 @@
+// spec: specs/shop-search-and-checkout.md
+// seed: tests/seed-shop.spec.ts
+//
+// 修復後の状態: 一意に解決できる ID セレクタに切り替えた。
+// strict mode violation の典型的な対処は、
+// (1) より具体的な role / accessible name を使う
+// (2) ID セレクタ等の unique identifier を使う
+// (3) `.first()` / `.nth(N)` で意図的に絞る
+// のいずれか。本例では (2) を採用している。
+
+import { test, expect } from './fixtures';
+
+test.describe('Cart Counter (fixed)', () => {
+  test('Cart counter starts at zero', async ({ page }) => {
+    // Expected Results:
+    // - The cart counter span is visible and shows "0"
+    const cartCount = page.locator('#cart-count');
+    await expect(cartCount).toBeVisible();
+    await expect(cartCount).toHaveText('0');
+  });
+});

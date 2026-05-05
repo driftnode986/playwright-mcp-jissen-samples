@@ -1,0 +1,21 @@
+// spec: specs/saas-dashboard-basic.md
+// seed: tests/seed-saas.spec.ts
+//
+// 修復前の状態: KPI 値が固定値 '1230' で assertion されている。
+// アプリ側が動的データに切り替わると、毎回値が変動して assertion が fail する。
+
+import { test, expect } from './fixtures';
+
+test.describe('Inspecting KPIs (dynamic)', () => {
+  test('Default Range Shows 7 Day KPIs', async ({ page }) => {
+    // Expected Results:
+    // - The active users tile shows "1230"
+    await expect(page.locator('#kpi-users')).toHaveText('1230');
+
+    // - The revenue tile shows "482000"
+    await expect(page.locator('#kpi-revenue')).toHaveText('482000');
+
+    // - The churn rate tile shows "2.1%"
+    await expect(page.locator('#kpi-churn')).toHaveText('2.1%');
+  });
+});

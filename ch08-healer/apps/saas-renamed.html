@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>SaaS ダッシュボード (renamed)</title>
+  </head>
+  <body>
+    <header>
+      <h1>運用ダッシュボード</h1>
+      <nav aria-label="期間フィルタ">
+        <button type="button" data-range="7d" aria-pressed="true">7days</button>
+        <button type="button" data-range="30d" aria-pressed="false">30days</button>
+        <button type="button" data-range="90d" aria-pressed="false">90days</button>
+      </nav>
+    </header>
+    <main>
+      <section aria-labelledby="kpi-heading">
+        <h2 id="kpi-heading">KPI</h2>
+        <dl>
+          <dt>アクティブユーザー</dt>
+          <dd id="kpi-users" aria-live="polite">0</dd>
+          <dt>売上 (JPY)</dt>
+          <dd id="kpi-revenue" aria-live="polite">0</dd>
+          <dt>解約率</dt>
+          <dd id="kpi-churn" aria-live="polite">0%</dd>
+        </dl>
+      </section>
+    </main>
+    <script>
+      const ranges = {
+        '7d': { users: 1230, revenue: 482000, churn: 2.1 },
+        '30d': { users: 4840, revenue: 1985000, churn: 3.4 },
+        '90d': { users: 13420, revenue: 5870000, churn: 4.2 },
+      };
+      let currentRange = '7d';
+
+      const users = document.getElementById('kpi-users');
+      const revenue = document.getElementById('kpi-revenue');
+      const churn = document.getElementById('kpi-churn');
+      const rangeBtns = document.querySelectorAll('[data-range]');
+
+      function renderKpi() {
+        const r = ranges[currentRange];
+        users.textContent = String(r.users);
+        revenue.textContent = String(r.revenue);
+        churn.textContent = `${r.churn}%`;
+        for (const btn of rangeBtns) {
+          btn.setAttribute('aria-pressed', btn.dataset.range === currentRange ? 'true' : 'false');
+        }
+      }
+
+      for (const btn of rangeBtns) {
+        btn.addEventListener('click', () => {
+          currentRange = btn.dataset.range;
+          renderKpi();
+        });
+      }
+
+      renderKpi();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+// spec: specs/shop-search-and-checkout.md
+// seed: tests/seed-shop.spec.ts
+//
+// 修復前の状態: getByText('カート') がヘッダの "カート: <span>0</span> 件" の
+// テキストノードと、aria-live span 自体の両方にマッチして strict mode violation
+// で fail する。
+
+import { test, expect } from './fixtures';
+
+test.describe('Cart Counter (broken)', () => {
+  test('Cart counter starts at zero', async ({ page }) => {
+    // Expected Results:
+    // - The cart label is visible
+    await expect(page.getByText('カート')).toBeVisible();
+  });
+});

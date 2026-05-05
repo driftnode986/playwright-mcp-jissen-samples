@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Todo アプリ</title>
+  </head>
+  <body>
+    <main>
+      <h1>Todo アプリ</h1>
+      <form id="add-form" aria-label="タスク追加">
+        <label>
+          タスク
+          <input type="text" id="todo-input" placeholder="What needs to be done?" autocomplete="off">
+        </label>
+        <button type="submit">追加</button>
+      </form>
+      <p>残り: <span id="active-count" aria-live="polite">0</span> 件</p>
+      <ul id="todo-list" aria-label="タスク一覧"></ul>
+      <nav aria-label="フィルタ">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="active" aria-pressed="false">Active</button>
+        <button type="button" data-filter="completed" aria-pressed="false">Completed</button>
+      </nav>
+      <button type="button" id="clear-completed">完了済みをクリア</button>
+    </main>
+    <script>
+      const todos = [];
+      let filter = 'all';
+      const list = document.getElementById('todo-list');
+      const input = document.getElementById('todo-input');
+      const form = document.getElementById('add-form');
+      const activeCount = document.getElementById('active-count');
+      const clearBtn = document.getElementById('clear-completed');
+      const filterBtns = document.querySelectorAll('[data-filter]');
+
+      function visible() {
+        if (filter === 'active') return todos.filter((t) => !t.done);
+        if (filter === 'completed') return todos.filter((t) => t.done);
+        return todos;
+      }
+
+      function render() {
+        list.innerHTML = '';
+        for (const todo of visible()) {
+          const li = document.createElement('li');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = todo.done;
+          checkbox.setAttribute('aria-label', `${todo.text} を完了にする`);
+          checkbox.addEventListener('change', () => {
+            todo.done = checkbox.checked;
+            render();
+          });
+          const span = document.createElement('span');
+          span.textContent = todo.text;
+          if (todo.done) span.style.textDecoration = 'line-through';
+          const del = document.createElement('button');
+          del.type = 'button';
+          del.textContent = '削除';
+          del.setAttribute('aria-label', `${todo.text} を削除`);
+          del.addEventListener('click', () => {
+            const idx = todos.indexOf(todo);
+            if (idx >= 0) todos.splice(idx, 1);
+            render();
+          });
+          li.append(checkbox, ' ', span, ' ', del);
+          list.append(li);
+        }
+        activeCount.textContent = String(todos.filter((t) => !t.done).length);
+        for (const btn of filterBtns) {
+          btn.setAttribute('aria-pressed', btn.dataset.filter === filter ? 'true' : 'false');
+        }
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        todos.push({ text, done: false });
+        input.value = '';
+        render();
+      });
+      clearBtn.addEventListener('click', () => {
+        for (let i = todos.length - 1; i >= 0; i--) {
+          if (todos[i].done) todos.splice(i, 1);
+        }
+        render();
+      });
+      for (const btn of filterBtns) {
+        btn.addEventListener('click', () => {
+          filter = btn.dataset.filter;
+          render();
+        });
+      }
+      render();
+    </script>
+  </body>
+</html>

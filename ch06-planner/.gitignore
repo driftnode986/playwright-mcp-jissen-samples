@@ -1,0 +1,13 @@
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+.DS_Store
+
+# .claude/ は global gitignore で除外されるが、Test Agents の agent definition は教材配布対象のため unignore
+!.claude/
+!.claude/**
+
+# .mcp.json も同様（init-agents 生成物として配布）
+!.mcp.json

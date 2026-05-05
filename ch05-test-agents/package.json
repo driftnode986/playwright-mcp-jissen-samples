@@ -1,0 +1,19 @@
+{
+  "name": "ch05-test-agents",
+  "version": "0.1.0",
+  "description": "Ch05 Playwright Test Agents 全貌 (Claude Code × Playwright MCP 実践ガイド)",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "agents:init": "playwright init-agents --loop=claude"
+  },
+  "devDependencies": {
+    "@playwright/mcp": "0.0.73",
+    "@playwright/test": "1.59.1",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -21,3 +21,10 @@ blob-report/
 # グローバル gitignore で除外されていても unignore する。
 !.mcp.json
 !**/.mcp.json
+
+# Ch05 以降では Playwright init-agents が生成する .claude/agents/ を
+# 教材として配布するため、グローバル gitignore で除外されていても unignore する。
+!.claude/
+!.claude/**
+!**/.claude/
+!**/.claude/**

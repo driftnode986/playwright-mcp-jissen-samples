@@ -1,0 +1,37 @@
+# nightly ワークフロー - cron で毎日 1 回フルリグレッション + Phase 3 プラン雛形生成
+# 出典: https://playwright.dev/docs/ci + GitHub Actions schedule 公式構文
+# Test Agents の Planner は対話型起動が前提のため CI 自動化の対象外.
+# 本ワークフローでは Planner 入力用の accessibility tree snapshot を artifacts として
+# 保存する代替形を取る (Ch12 リサーチノート Section 6 の判断に従う)
+name: Playwright Nightly
+on:
+  schedule:
+    - cron: '0 18 * * *'  # 毎日 UTC 18:00 (JST 03:00)
+  workflow_dispatch:
+jobs:
+  full-regression:
+    timeout-minutes: 90
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run full regression
+        run: npx playwright test
+      - uses: actions/upload-artifact@v5
+        if: ${{ !cancelled() }}
+        with:
+          name: nightly-report-${{ github.run_attempt }}
+          path: playwright-report/
+          retention-days: 14
+      - uses: actions/upload-artifact@v5
+        if: ${{ failure() }}
+        with:
+          name: nightly-artifacts
+          path: test-results/
+          retention-days: 14

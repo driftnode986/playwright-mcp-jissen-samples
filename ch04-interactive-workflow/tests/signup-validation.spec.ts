@@ -6,7 +6,7 @@ const signupUrl = pathToFileURL(
   path.resolve(__dirname, '../examples/signup.html')
 ).toString();
 
-test.describe('登録フォームのバリデーション網羅（Phase 4 生成テスト）', () => {
+test.describe('登録フォームのバリデーション網羅', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(signupUrl);
   });

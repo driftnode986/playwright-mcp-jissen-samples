@@ -6,7 +6,7 @@ const shopUrl = pathToFileURL(
   path.resolve(__dirname, '../examples/shop.html')
 ).toString();
 
-test.describe('商品検索フロー（Phase 4 で生成されたテストの最終形）', () => {
+test.describe('商品検索フロー', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(shopUrl);
   });
@@ -15,7 +15,9 @@ test.describe('商品検索フロー（Phase 4 で生成されたテストの最
     await page.getByLabel('検索ワード').fill('キーボード');
     await page.getByRole('button', { name: '検索' }).click();
 
-    const items = page.getByRole('list', { name: '商品一覧' }).getByRole('listitem');
+    const items = page
+      .getByRole('list', { name: '商品一覧' })
+      .getByRole('listitem');
     await expect(items).toHaveCount(2);
     await expect(items.first()).toContainText('黒色のキーボード');
     await expect(items.last()).toContainText('白色のキーボード');

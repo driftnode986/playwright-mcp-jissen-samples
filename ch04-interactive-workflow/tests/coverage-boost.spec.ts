@@ -6,7 +6,7 @@ const loginUrl = pathToFileURL(
   path.resolve(__dirname, '../examples/login.html')
 ).toString();
 
-test.describe('既存ログインテストへのカバレッジ補強（Phase 4 生成テスト）', () => {
+test.describe('既存ログインテストへのカバレッジ補強', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(loginUrl);
   });

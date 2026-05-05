@@ -1,0 +1,11 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "file://",
+      "localStorage": [
+        { "name": "demo-auth-email", "value": "user@example.com" }
+      ]
+    }
+  ]
+}

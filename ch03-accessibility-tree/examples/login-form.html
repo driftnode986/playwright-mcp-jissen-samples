@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>ログイン</title>
+  </head>
+  <body>
+    <main>
+      <h1>ログイン</h1>
+      <form aria-labelledby="login-heading">
+        <h2 id="login-heading">アカウント情報</h2>
+        <label>
+          メールアドレス
+          <input type="email" name="email" required>
+        </label>
+        <label>
+          パスワード
+          <input type="password" name="password" required>
+        </label>
+        <label>
+          <input type="checkbox" name="remember">
+          ログイン状態を保存する
+        </label>
+        <button type="submit">ログイン</button>
+        <p><a href="/forgot">パスワードを忘れた場合</a></p>
+      </form>
+    </main>
+  </body>
+</html>

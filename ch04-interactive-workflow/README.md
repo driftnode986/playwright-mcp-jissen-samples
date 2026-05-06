@@ -13,7 +13,7 @@
 
 ```
 ch04-interactive-workflow/
-├── .mcp.json                    # --caps=testing,storage 有効化の例
+├── .mcp.json                    # 2 サーバー併記 (@playwright/mcp + playwright-test)
 ├── playwright.config.ts
 ├── package.json
 ├── tsconfig.json
@@ -73,18 +73,23 @@ Phase 4: prompts/phase4-codify.md    → .spec.ts 生成
       "command": "npx",
       "args": [
         "@playwright/mcp@0.0.73",
-        "--caps=testing,storage",
         "--isolated",
         "--storage-state=./auth/admin.json"
       ]
+    },
+    "playwright-test": {
+      "command": "npx",
+      "args": ["playwright", "run-test-mcp-server"]
     }
   }
 }
 ```
 
-- `--caps=testing` で Phase 4 の `browser_generate_locator` と `browser_verify_*` を解禁
-- `--caps=storage` で `browser_storage_state` / `browser_set_storage_state` と cookie / localStorage 個別操作を解禁
+- `playwright` (`@playwright/mcp`) はブラウザ操作の主役。`browser_navigate` / `browser_snapshot` / `browser_click` などの基本ツールを提供する
+- `playwright-test` (`run-test-mcp-server`) は Test Agents 用 MCP。Phase 4 で使う `browser_generate_locator` / `browser_verify_*` と、認証保存用の `browser_storage_state` / `browser_set_storage_state` がここに含まれる
+- 両者は独立した MCP サーバーで、ツール名空間も別。Claude Code からは `mcp__playwright__*` と `mcp__playwright-test__*` の prefix で区別される
 - `--isolated` を併用すると毎回クリーンな context で起動する。`--storage-state` を渡すと起動時に cookie と localStorage がロードされる
+- `@playwright/mcp` 側の `--caps` は `vision` / `pdf` / `devtools` の 3 種のみで、`testing` / `storage` という caps は実機で存在しない（v0.0.73 検証）
 
 ## storage state の事前生成
 
@@ -102,8 +107,8 @@ await client.callTool({
 
 ## トラブルシューティング
 
-1. **`browser_generate_locator` が見つからない**: `.mcp.json` の `args` に `--caps=testing` を追加して再起動する
-2. **`browser_storage_state` が見つからない**: `--caps=storage` の同等指定が必要
+1. **`browser_generate_locator` が見つからない**: `.mcp.json` に `playwright-test` (`run-test-mcp-server`) エントリが登録されているか確認する。`@playwright/mcp` 側にはこのツールがない
+2. **`browser_storage_state` が見つからない**: 同上。`run-test-mcp-server` 経由で利用する
 3. **`--storage-state` のファイルが読めない**: 相対パスは `npx` の起動 cwd 基準。絶対パスに直すと安定する
 4. **`file://` の `localStorage` が共有されない**: ブラウザは `file://` を origin 単位で隔離する。`auth/admin.json` の `origins[].origin` を `file://` のままで良いが、別 host へ展開したら origin を書き換える
 5. **`[ref=eN]` が次のセッションでズレる**: ref はページ初回 snapshot で採番される。Phase 3 と Phase 4 をまたぐときは Phase 4 で再採取する
